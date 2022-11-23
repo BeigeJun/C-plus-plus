@@ -1,0 +1,55 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+namespace COM_POS
+{
+	enum { CLERK, SENIOR, ASSIST, MANAGER };;
+	void ShowPositionInfo(int pos)
+	{
+		switch (pos)
+		{
+		case CLERK:
+			cout << "사원" << endl;
+			break;
+		case SENIOR:
+			cout << "주임" << endl;
+			break;
+		case ASSIST:
+			cout << "대리" << endl;
+			break;
+		case MANAGER:
+			cout << "과장" << endl;
+			break;
+		}
+	}
+}
+
+class NameCard
+{
+private:
+	char* name;
+	char* company;
+	char* phone;
+	int position;
+public:
+	NameCard(char* name, char* company, char* phone, int pos)
+		: position(pos)
+	{
+		this->name = new char[strlen(name) + 1];
+		strcpy(this->name, name);
+		this->company = new char[strlen(company) + 1];
+		strcpy(this->company, company);
+		this->phone = new char[strlen(phone) + 1];
+		strcpy(this->phone, phone);
+	}
+	NameCard(const NameCard& a) :position(a.position)
+	{
+		this->name = new char[strlen(a.name) + 1];
+		strcpy(this->name, a.name);
+		this->company = new char[strlen(a.company) + 1];
+		strcpy(this->company, a.company);
+		this->phone = new char[strlen(a.phone) + 1];
+		strcpy(this->phone, a.phone);
+	}
+};
