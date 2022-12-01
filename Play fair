@@ -281,5 +281,6 @@ int main() {
 	pfair.makeTable();
 	pfair.showTable();
 	cout << "암호화할 문장 : ";
-	pfair.makeEncryption("BE CAREFUL FOR ASSASsINATOR");
+	getline(cin, str);
+	pfair.makeEncryption(str);
 }
