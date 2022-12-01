@@ -97,7 +97,7 @@ string Playfair::makeEncryption(string mEncryption) {
 	{
 		if (mEncryption[a] != ' ')
 		{
-			cout << mEncryption[a];
+			
 		}
 		else
 		{
@@ -106,9 +106,16 @@ string Playfair::makeEncryption(string mEncryption) {
 	}
 	cout << mEncryption << endl;
 
+	
+	for (int j = 0; j < mEncryption.length(); j = j + 2)
+	{
+		if (mEncryption[j] == mEncryption[j + 1])
+			mEncryption = mEncryption.insert(j+1,"X");
+	}
 	howLong = mEncryption.length();
 	cout << howLong << endl;
 	isthatodd = howLong % 2;
+
 
 	if (isthatodd == 1) {
 		cout << "홀수입니다." << endl;     //마지막 자리에 X 붙이기
@@ -119,12 +126,6 @@ string Playfair::makeEncryption(string mEncryption) {
 		cout << "짝수입니다." << endl;
 	}
 
-
-	for (int j = 0; j < mEncryption.length(); j = j + 2)
-	{
-		if (mEncryption[j] == mEncryption[j + 1])
-			mEncryption.replace(j+1,1,"X");
-	}
 	cout << "x치환 후 : ";
 
 	for (int j = 0; j < mEncryption.length(); j++) {
@@ -133,19 +134,18 @@ string Playfair::makeEncryption(string mEncryption) {
 			cout << "  ";
 	}
 	cout << endl;
-	
+
 	string First_Word;
 	string Last_Word;
 	int Faddres, Laddres;
-	int z,q;
+	int z, q;
 	for (int s = 0; s < mEncryption.length(); s = s + 2)
 	{
 		First_Word = mEncryption[s];
 		Last_Word = mEncryption[s + 1];
 		int a = mEncryption[s];
 		int b = mEncryption[s + 1];
-		
-		cout << "첫단어:" << First_Word << "  마지막단어 :" << Last_Word << endl ;
+
 		for (z = 0; z < 25; z++)
 		{
 			int c = mTable[z];
@@ -161,14 +161,13 @@ string Playfair::makeEncryption(string mEncryption) {
 		{
 			if (mTable[q] != mEncryption[s + 1])
 			{
-				
+
 			}
 			else
 			{
 				Laddres = q;
 			}
 		}
-		cout << "첫주소:" << Faddres << "  마지막 주소 :" << Laddres << endl << endl;
 		int F_Line, L_Line;
 		if (Faddres >= 0 && Faddres <= 4)
 		{
@@ -210,12 +209,10 @@ string Playfair::makeEncryption(string mEncryption) {
 		{
 			L_Line = 5;
 		}
-		cout << "라인:" << F_Line << "  라인 :" << L_Line << endl << endl;
-		int True,True1;
+		int True, True1;
 		True = (Faddres + 1) % 5;
 		True1 = (Laddres + 1) % 5;
-		cout << True << True1 << endl;
-		
+
 		if (L_Line == F_Line)
 		{
 			if (True == 0)
@@ -227,11 +224,11 @@ string Playfair::makeEncryption(string mEncryption) {
 			{
 				Passward += mTable[Faddres + 1];
 			}
-			if(True1 == 0)
+			if (True1 == 0)
 			{
 				Passward += mTable[Laddres - 4];
 			}
-			else if(True1 !=0 )
+			else if (True1 != 0)
 			{
 				Passward += mTable[Laddres + 1];
 			}
@@ -240,7 +237,7 @@ string Playfair::makeEncryption(string mEncryption) {
 
 		else if (Faddres % 5 == Laddres % 5) {
 			if (Faddres >= 20 && Faddres <= 24) {
-				Passward += mTable[Faddres -20];
+				Passward += mTable[Faddres - 20];
 			}
 			else {
 				Passward += mTable[Faddres + 5];
@@ -258,33 +255,31 @@ string Playfair::makeEncryption(string mEncryption) {
 			int gap;
 			if (F_Line > L_Line) {
 				gap = F_Line - L_Line;
-				cout << Laddres + 5 * gap << endl;
-				Passward += mTable[Laddres + 5 * gap];
-				cout << Faddres - 5 * gap << endl;
 				Passward += mTable[Faddres - 5 * gap];
+				Passward += mTable[Laddres + 5 * gap];
 			}
 			else {
 				gap = L_Line - F_Line;
-				cout << Laddres - 5 * gap << endl;
-				Passward += mTable[Laddres - 5 * gap];
-				cout << Faddres + 5 * gap << endl;
 				Passward += mTable[Faddres + 5 * gap];
+				Passward += mTable[Laddres - 5 * gap];
 			}
 
 		}
 		cout << Passward << endl;
 	}
-	
+
 
 
 	return mEncryption;
 }
-	
+
 
 
 int main() {
+	string str;
 	Playfair pfair("assasinator", "q/z");
 	pfair.makeTable();
 	pfair.showTable();
-	pfair.makeEncryption("hello my name is jjun");
+	cout << "암호화할 문장 : ";
+	pfair.makeEncryption("BE CAREFUL FOR ASSASsINATOR");
 }
