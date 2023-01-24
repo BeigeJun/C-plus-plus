@@ -16,6 +16,7 @@ public:
 	Node* DeleteFromHead2(Node* base);
 	Node2* AppendFromHead2(Node* base);
 	Node* DeleteFromTail(LinkedList* _ptList);
+	void DeleteAll2(Node* base);
 	void DeleteAll(LinkedList* _ptList);
 	Node* Delete(LinkedList* _ptList);
 	Node* Delete2(LinkedList* _ptList);
@@ -218,12 +219,25 @@ Node* DEF::DeleteFromTail(LinkedList* _ptList)
 	}
 	return 0;
 }
+void DEF::DeleteAll2(Node* base)
+{
+	Node2* pointer = base->medicine_head;
+	for (int i = base->medicine_num; i > 1; i--)
+	{
+		pointer = pointer->m_pNext;
+		free(pointer->m_Previous);
+	}
+	free(pointer);
+	base->medicine_head = NULL;
+	base->medicine_num = 0;
+}
 void DEF::DeleteAll(LinkedList* _ptList)
 {
 	Node* pointer = _ptList->m_pHead;
 	for (int i = _ptList->m_uCount; i > 1; i--)
 	{
 		pointer = pointer->m_pNext;
+		DeleteAll2(pointer->m_Previous);
 		free(pointer->m_Previous);
 	}
 	free(pointer);
@@ -264,6 +278,7 @@ Node* DEF::Delete(LinkedList* _ptList)
 					SomeThingNext = SomeThing->m_pNext;
 					SomeThingBefore->m_pNext = SomeThingNext;
 					SomeThingNext->m_Previous = SomeThingBefore;
+					DeleteAll2(SomeThing);
 					SomeThingBefore = NULL;
 					SomeThingNext = NULL;
 					free(SomeThingBefore);
@@ -288,6 +303,13 @@ Node* DEF::Delete2(LinkedList* _ptList)
 	cin >> name1;
 	Node* pointer = new Node;
 	pointer = _ptList->m_pHead;
+	if (_ptList->m_uCount == 0)
+	{
+		cout << name1 << " 고객이 없습니다." << endl;
+		pointer = NULL;
+		free(pointer);
+		return 0;
+	}
 	for (int i = 0; i != _ptList->m_uCount; i++)
 	{
 		if (strcmp(pointer->name, name1) == 0)
@@ -302,6 +324,7 @@ Node* DEF::Delete2(LinkedList* _ptList)
 		cout << name1 << " 고객이 없습니다." << endl;
 		pointer = NULL;
 		free(pointer);
+		return 0;
 	}
 
 	char name[20];
