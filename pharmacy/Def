@@ -4,7 +4,6 @@
 #include"LinkedList.h"
 using namespace std;
 class DEF : public LinkedList {
-
 public:
 	LinkedList* Create();
 	void Destroy(LinkedList* _ptList);
@@ -13,22 +12,15 @@ public:
 	Node* Read(LinkedList* _ptList);
 	void Traversal(LinkedList* _ptList);
 	Node* AppendFromHead(LinkedList* _ptList);
-	Node* AppendFromTail(LinkedList* _ptList, int _iObject);
 	Node* DeleteFromHead(LinkedList* _ptList);
+	Node* DeleteFromHead2(Node* base);
 	Node2* AppendFromHead2(Node* base);
 	Node* DeleteFromTail(LinkedList* _ptList);
 	void DeleteAll(LinkedList* _ptList);
-	Node* InsertBefor(LinkedList* _ptList, int num, int a);
-	Node* InsertAfter(LinkedList* _ptList, int num, int a);
 	Node* Delete(LinkedList* _ptList);
+	Node* Delete2(LinkedList* _ptList);
 	Node* Modify(LinkedList* _ptList);
-	Node* LinearSearchByUnique(LinkedList* _ptList, int x);
-	Node* LinearSearchByDuplicate(LinkedList* _ptList, int x);
-	Node* BinarySearchByUnique(LinkedList* _ptList, int target, int start, int end);
-	Node* BinarySearchByDuplicate(LinkedList* _ptList, int target, int start, int end);
-	void SortByBubble(LinkedList* _ptList);
-	int SortByInsertion(LinkedList* _ptList);
-	void SortBySelection(LinkedList* _ptList);
+	Node* Modify2(LinkedList* _ptList);
 	int menu();
 };
 LinkedList* DEF::Create()
@@ -76,14 +68,14 @@ Node* DEF::Read(LinkedList* _ptList)
 	pointer = _ptList->m_pHead;
 	for (int i = 0; i != _ptList->m_uCount; i++)
 	{
-		if (strcmp(pointer->name,a) == 0)
+		if (strcmp(pointer->name, a) == 0)
 		{
 			cout << "나이: " << pointer->m_iObject << " 주소: " << pointer->adress << endl;
 			cout << "약 :";
 			Node2* pointer2 = pointer->medicine_head;
 			for (int i = 0; i != pointer->medicine_num; i++)
 			{
-				cout << pointer2->name<< " ";
+				cout << pointer2->name << " ";
 				pointer2 = pointer2->m_pNext;
 			}
 			cout << endl;
@@ -95,7 +87,7 @@ Node* DEF::Read(LinkedList* _ptList)
 		}
 		pointer = pointer->m_pNext;
 	}
-	cout << a<<" 고객이 없습니다." << endl;
+	cout << a << " 고객이 없습니다." << endl;
 	pointer = NULL;
 	free(pointer);
 	return 0;
@@ -133,7 +125,7 @@ Node2* DEF::AppendFromHead2(Node* base)
 	int num = 0;
 	cout << "약의 갯수를 입력하시오:";
 	cin >> num;
-	for(int i = 0; i!=num;i++)
+	for (int i = 0; i != num; i++)
 	{
 		Node2* pointer = GetNode2();
 		Node2* pre_pointer;
@@ -156,23 +148,6 @@ Node2* DEF::AppendFromHead2(Node* base)
 	}
 	return 0;
 }
-/*
-Node* DEF::AppendFromTail(LinkedList* _ptList, int _iObject)
-{
-	_ptList->m_pCurrent = GetNode(_iObject);
-	if (_ptList->m_pTail) {
-		_ptList->m_pTail->m_pNext = _ptList->m_pCurrent;
-		_ptList->m_pCurrent->m_Previous = _ptList->m_pTail;
-	}
-	else
-		_ptList->m_pHead = _ptList->m_pCurrent;
-
-	_ptList->m_pTail = _ptList->m_pCurrent;
-	(_ptList->m_uCount)++;
-	cout << "맨 뒤에 " << _iObject << " 추가" << endl;
-	return 0;
-}
-*/
 Node* DEF::DeleteFromHead(LinkedList* _ptList)
 {
 	if (_ptList->m_uCount == 1)
@@ -193,6 +168,28 @@ Node* DEF::DeleteFromHead(LinkedList* _ptList)
 		pointer = _ptList->m_pHead;
 		_ptList->m_pHead = pointer->m_pNext;
 		(_ptList->m_uCount)--;
+		free(pointer);
+	}
+	return 0;
+}
+Node* DEF::DeleteFromHead2(Node* base)
+{
+	if (base->medicine_num == 1)
+	{
+		Node2* pointer;
+		pointer = base->medicine_head;
+		free(pointer);
+		base->medicine_head = NULL;
+		base->medicine_num = 0;
+	}
+	else {
+		Node2* pointer;
+		pointer = base->medicine_head;
+		pointer = pointer->m_pNext;
+		pointer->m_Previous = pointer;
+		pointer = base->medicine_head;
+		base->medicine_head = pointer->m_pNext;
+		(base->medicine_num)--;
 		free(pointer);
 	}
 	return 0;
@@ -235,78 +232,10 @@ void DEF::DeleteAll(LinkedList* _ptList)
 	_ptList->m_pTail = NULL;
 	_ptList->m_uCount = 0;
 }
-/*
-Node* DEF::InsertBefor(LinkedList* _ptList, int num, int a)
-{
-	if (_ptList->m_uCount < 1)
-	{
-		cout << "노드의 개수가 0개입니다." << endl;
-		return 0;
-	}
-	if (_ptList->m_uCount < num)
-	{
-		cout << num << "번째 노드는 없습니다." << endl;
-		return 0;
-	}
-	Node* pointer = _ptList->m_pHead;
-	Node* pointer_before;
-	Node* New = GetNode(a);
-	if (num == 1)
-	{
-		AppendFromHead(_ptList, a);
-	}
-	else {
-		for (int i = 0; i != num - 1; i++)
-		{
-			pointer = pointer->m_pNext;
-		}
-		pointer_before = pointer->m_Previous;
-		New->m_pNext = pointer;
-		pointer->m_Previous = New;
-		New->m_Previous = pointer_before;
-		pointer_before->m_pNext = New;
-		(_ptList->m_uCount)++;
-	}
-	return 0;
-}
-Node* DEF::InsertAfter(LinkedList* _ptList, int num, int a)  //기존노드 뒷 삽입
-{
-	if (_ptList->m_uCount < 1)
-	{
-		cout << "노드의 개수가 0개입니다." << endl;
-		return 0;
-	}
-	else if (_ptList->m_uCount < num)
-	{
-		cout << num << "번째 노드는 없습니다." << endl;
-		return 0;
-	}
-	Node* pointer = _ptList->m_pHead;
-	Node* pointer_next;
-	Node* New = GetNode(a);
-	if (num == _ptList->m_uCount)
-	{
-		AppendFromTail(_ptList, a);
-	}
-	else {
-		for (int i = 0; i != num - 1; i++)
-		{
-			pointer = pointer->m_pNext;
-		}
-		pointer_next = pointer->m_pNext;
-		New->m_pNext = pointer_next;
-		pointer->m_pNext = New;
-		New->m_Previous = pointer;
-		pointer_next->m_Previous = New;
-		(_ptList->m_uCount)++;
-	}
-	return 0;
-}
-*/
 Node* DEF::Delete(LinkedList* _ptList)
 {
 	char name[20];
-	int count = 0;
+	int count = 1;
 	cout << "삭제할 고객님의 이름을 입력하시오";
 	cin >> name;
 	Node* SomeThing;
@@ -351,6 +280,78 @@ Node* DEF::Delete(LinkedList* _ptList)
 		return 0;
 	}
 }
+Node* DEF::Delete2(LinkedList* _ptList)
+{
+	char name1[20];
+	int count1 = 1;
+	cout << "이름을 입력하시오 :";
+	cin >> name1;
+	Node* pointer = new Node;
+	pointer = _ptList->m_pHead;
+	for (int i = 0; i != _ptList->m_uCount; i++)
+	{
+		if (strcmp(pointer->name, name1) == 0)
+		{
+			break;
+		}
+		pointer = pointer->m_pNext;
+		count1++;
+	}
+	if (count1 == _ptList->m_uCount)
+	{
+		cout << name1 << " 고객이 없습니다." << endl;
+		pointer = NULL;
+		free(pointer);
+	}
+
+	char name[20];
+	int count = 1;
+	cout << "약의 이름을 입력하시오 :";
+	cin >> name;
+	Node2* SomeThing;
+	Node2* SomeThingBefore;
+	Node2* SomeThingNext;
+	if (pointer->medicine_num == 0)
+	{
+		cout << "저장된 정보가 없습니다." << endl;
+	}
+	else {
+		SomeThing = pointer->medicine_head;
+		for (int i = 0; i != pointer->medicine_num; i++)
+		{
+			if (strcmp(SomeThing->name, name) == 0)
+			{
+				if (pointer->medicine_num == count) {
+					SomeThing = SomeThing->m_Previous;
+					free(SomeThing->m_pNext);
+					(pointer->medicine_num)--;
+					return 0;
+				}
+				else if (count == 1) {
+					DeleteFromHead2(pointer);
+					return 0;
+				}
+				else {
+					SomeThingBefore = SomeThing->m_Previous;
+					SomeThingNext = SomeThing->m_pNext;
+					SomeThingBefore->m_pNext = SomeThingNext;
+					SomeThingNext->m_Previous = SomeThingBefore;
+					SomeThingBefore = NULL;
+					SomeThingNext = NULL;
+					free(SomeThingBefore);
+					free(SomeThingNext);
+					free(SomeThing);
+					(pointer->medicine_num)--;
+					return 0;
+				}
+			}
+			SomeThing = SomeThing->m_pNext;
+			count++;
+		}
+		cout << "해당 약이 저장되어있지 않습니다.";
+		return 0;
+	}
+}
 Node* DEF::Modify(LinkedList* _ptList)
 {
 
@@ -383,358 +384,62 @@ Node* DEF::Modify(LinkedList* _ptList)
 	free(pointer);
 	return 0;
 }
-/*
-Node* DEF::LinearSearchByUnique(LinkedList* _ptList, int x)
+Node* DEF::Modify2(LinkedList* _ptList)
 {
-	if (_ptList->m_uCount < 1)
-	{
-		cout << "노드의 개수가 0개입니다." << endl;
-		return 0;
-	}
-	int ox = 0;
-	int i = 0;
-	Node* pointer = _ptList->m_pHead;
-	for (i = 0; i != _ptList->m_uCount; i++)
-	{
-		if (pointer->m_iObject == x)
-		{
-			cout << i + 1 << "번째에 있습니다." << endl;
-			break;
-			ox++;
-		}
-		pointer = pointer->m_pNext;
-		if (i == _ptList->m_uCount - 1) {
-			if (ox != 0)
-			{
-				continue;
-			}
-			else if (ox == 0) {
-				cout << "없는 숫자입니다" << endl;
-			}
-		}
-	}
-	return 0;
-}
-Node* DEF::LinearSearchByDuplicate(LinkedList* _ptList, int x)
-{
-	if (_ptList->m_uCount < 1)
-	{
-		cout << "노드의 개수가 0개입니다." << endl;
-		return 0;
-	}
-	int ox = 0;
-	int i = 0;
-	Node* pointer = _ptList->m_pHead;
-	for (i = 0; i != _ptList->m_uCount; i++)
-	{
-		if (pointer->m_iObject == x)
-		{
-			cout << i + 1 << "번째";
-			ox++;
-		}
-		pointer = pointer->m_pNext;
-		if (i == _ptList->m_uCount - 1) {
-			if (ox != 0)
-			{
-				cout << "에 있습니다." << endl;
-			}
-			else if (ox == 0) {
-				cout << "없는 숫자 입니다." << endl;
-			}
-		}
-	}
-	return 0;
-}
-Node* DEF::BinarySearchByUnique(LinkedList* _ptList, int target, int start, int end) {
-	if (_ptList->m_uCount == 0)
-	{
-		cout << "노드의 개수가 0개입니다." << endl;
-		return 0;
-	}
-	Node* pointer = _ptList->m_pHead;
-	int where = 1;
-	int ox = 0;
-	int i = 0;
-	int half;
-	int what;
-	for (i = 0; i != _ptList->m_uCount; i++)
-	{
-		if (pointer->m_iObject == target)
-		{
-			ox++;
-		}
-		pointer = pointer->m_pNext;
-		if (i == _ptList->m_uCount - 1) {
-			if (ox != 0)
-			{
-				continue;
-			}
-			else if (ox == 0) {
-				cout << "없는 숫자 입니다." << endl;
-				return 0;
-			}
-		}
-	}
+
+	char a[20];
+	cout << "이름을 입력하시오: ";
+	cin >> a;
+	Node* pointer = new Node;
 	pointer = _ptList->m_pHead;
-	half = (start + end) / 2;
-
-	for (int i = 0; i < half; i++)
+	for (int i = 0; i != _ptList->m_uCount; i++)
 	{
-		pointer = pointer->m_pNext;
-		where = where + 1;
-	}
-
-	what = pointer->m_iObject;
-	if (what == target)
-	{
-
-		cout << where << "번째" << endl;
-		return 0;
-	}
-
-	else if (what < target)
-	{
-		where = where + 1;
-		pointer = pointer->m_pNext;
-		BinarySearchByUnique(_ptList, target, where, end);
-	}
-	else if (what > target)
-	{
-		where = where - 1;
-		pointer = pointer->m_Previous;
-		BinarySearchByUnique(_ptList, target, start, where);
-	}
-}
-Node* DEF::BinarySearchByDuplicate(LinkedList* _ptList, int target, int start, int end)
-{
-
-	if (end < 1 || start > _ptList->m_uCount || start > end)
-	{
-	}
-	else
-	{
-		if (_ptList->m_uCount == 0)
+		if (strcmp(pointer->name, a) == 0)
 		{
-			cout << "노드의 개수가 0개입니다." << endl;
+			Node2* M_pointer = pointer->medicine_head;
+			int a;
+			cout << "변경전:" << endl;
+			for (int i = 0; i < pointer->medicine_num; i++)
+			{
+				cout << M_pointer->name << " ";
+				M_pointer = M_pointer->m_pNext;
+			}
+			cout << endl;
+			M_pointer = NULL;
+			free(M_pointer);
+			AppendFromHead2(pointer);
+
+			pointer = NULL;
+			free(pointer);
 			return 0;
 		}
-		Node* pointer = _ptList->m_pHead;
-		int where = 1;
-		int ox = 0;
-		int count = 0;
-		int i = 0;
-		int half;
-		int what;
-
-		for (i = 0; i != _ptList->m_uCount; i++)
-		{
-			if (pointer->m_iObject == target)
-			{
-				ox++;
-			}
-			pointer = pointer->m_pNext;
-			if (i == _ptList->m_uCount - 1) {
-				if (ox != 0)
-				{
-					continue;
-				}
-				else if (ox == 0) {
-					cout << "없는 숫자 입니다." << endl;
-					return 0;
-				}
-			}
-		}
-
-
-		pointer = _ptList->m_pHead;
-		half = (start + end) / 2;
-
-
-		for (int i = 1; i < half; i++)
-		{
-			pointer = pointer->m_pNext;
-			where = where + 1;
-		}
-		what = pointer->m_iObject;
-
-		if (what == target)
-		{
-			cout << where << "번째 ";
-			count++;
-
-			BinarySearchByDuplicate(_ptList, target, where + 1, end);
-			BinarySearchByDuplicate(_ptList, target, start, where - 1);
-		}
-		else if (what < target)
-		{
-			BinarySearchByDuplicate(_ptList, target, where + 1, end);
-		}
-		else if (what > target)
-		{
-			BinarySearchByDuplicate(_ptList, target, start, where - 1);
-		}
-
-		if (count != 0)
-		{
-		}
-	}
-}
-void DEF::SortByBubble(LinkedList* _ptList)
-{
-
-	for (int i = 1; i != _ptList->m_uCount; i++)
-	{
-		if (_ptList->m_uCount == 0)
-		{
-			cout << "노드의 개수가 0개입니다." << endl;
-			break;
-		}
-		if (_ptList->m_uCount == 1)
-		{
-			break;
-		}
-		Node* pointer = _ptList->m_pHead;
-		Node* pointerNext = pointer->m_pNext;
-		for (int j = 1; j != _ptList->m_uCount; j++)
-		{
-			if (pointer->m_iObject > pointerNext->m_iObject)
-			{
-				int temp = 0;
-				temp = pointerNext->m_iObject;
-				pointerNext->m_iObject = pointer->m_iObject;
-				pointer->m_iObject = temp;
-				pointer = pointer->m_pNext;
-				pointerNext = pointerNext->m_pNext;
-				continue;
-			}
-			pointer = pointer->m_pNext;
-			pointerNext = pointerNext->m_pNext;
-		}
-	}
-}
-int DEF::SortByInsertion(LinkedList* _ptList)
-{
-	if (_ptList->m_uCount == 0)
-	{
-		cout << "노드의 개수가 0개입니다." << endl;
-		return 0;
-	}
-	Node* pointer = _ptList->m_pHead;
-	for (int i = 1; i < _ptList->m_uCount; i++)
-	{
-		if (_ptList->m_uCount == 1)
-		{
-			break;
-		}
-		Node* Next_pointer = pointer->m_pNext;
-		for (int k = 1; k < _ptList->m_uCount; k++)
-		{
-			if (pointer->m_iObject > Next_pointer->m_iObject)
-			{
-				int temp;
-				temp = pointer->m_iObject;
-				pointer->m_iObject = Next_pointer->m_iObject;
-				Next_pointer->m_iObject = temp;
-			}
-			Next_pointer = Next_pointer->m_pNext;
-		}
 		pointer = pointer->m_pNext;
 	}
+	cout << a << " 고객이 없습니다." << endl;
+	pointer = NULL;
+	free(pointer);
 	return 0;
 }
-void DEF::SortBySelection(LinkedList* _ptList)
-{
-
-	for (int z = 0; z < _ptList->m_uCount - 1; z++)
-	{
-		if (_ptList->m_uCount == 0)
-		{
-			cout << "노드의 개수가 0개입니다." << endl;
-			break;
-		}
-		if (_ptList->m_uCount == 1)
-		{
-			break;
-		}
-		Node* pointer = _ptList->m_pHead;
-		Node* head = _ptList->m_pHead;
-		int Min;
-
-		for (int x = 0; x < z; x++)
-		{
-			pointer = pointer->m_pNext;
-		}
-		Min = pointer->m_iObject;
-
-		for (int i = z; i < _ptList->m_uCount; i++)
-		{
-			if (pointer->m_iObject < Min)
-			{
-				Min = pointer->m_iObject;
-			}
-			pointer = pointer->m_pNext;
-		}
-
-		pointer = _ptList->m_pHead;
-		for (int x = 0; x < z; x++)
-		{
-			pointer = pointer->m_pNext;
-		}
-
-		for (int x = 0; x < _ptList->m_uCount; x++)
-		{
-			if (pointer->m_iObject != Min)
-			{
-				pointer = pointer->m_pNext;
-			}
-		}
-
-		for (int x = 0; x < z; x++)
-		{
-			head = head->m_pNext;
-		}
-		int temp = 0;
-		temp = head->m_iObject;
-		head->m_iObject = pointer->m_iObject;
-		pointer->m_iObject = temp;
-	}
-}
-*/
 int DEF::menu()
 {
-	char a;
 	int number;
 	int word = 0;
-	cout << "관리자를 만드시겠습니까? x입력시 종료(o/x) : ";
-	cin >> a;
-	system("cls");
-	if (a == 'x')
-	{
-		cout << "종료합니다." << endl;
-		return 0;
-	}
-	else if (a == 'o')
-
-	{
-		cout << "관리자 master가 생성되었습니다." << endl;
-	}
-	else
-	{
-		cout << "잘못입력하셨습니다. 프로그램을 종료합니다." << endl;
-		return 0;
-	}
+	
 
 	LinkedList* master = Create();
 	while (1)
 	{
+		cout << endl;
 		cout << " ------------기능을 선택해 주십쇼--------------" << endl;
 		cout << "|1.새 손님 정보 업로드                         |" << endl;
 		cout << "|2.손님 정보 보기                              |" << endl;
-		cout << "|3.손님 정보 변경                              |" << endl;
-		cout << "|4.모든 손님 정보 지우기                       |" << endl;
-		cout << "|5.지정 손님 정보 지우기                       |" << endl;
-		cout << "|6.모든 손님 이름 출력                         |" << endl;
-		cout << "|7.모든 정보 지우기(끝내기)                    |" << endl;
+		cout << "|3.손님 정보 변경(이름 나이 주소)              |" << endl;
+		cout << "|4.손님 약 정보 추가                           |" << endl;
+		cout << "|5.손님 약 정보 부분 삭제                      |" << endl;
+		cout << "|6.모든 손님 정보 지우기                       |" << endl;
+		cout << "|7.지정 손님 정보 지우기                       |" << endl;
+		cout << "|8.모든 손님 이름 출력                         |" << endl;
+		cout << "|9.모든 정보 지우기(끝내기)                    |" << endl;
 		cout << " ----------------------------------------------" << endl;
 		cout << "입력 : ";
 
@@ -760,7 +465,7 @@ int DEF::menu()
 			continue;
 		}
 		number = atoi(tmp);
-		if (a > 2147483647 && a < 0)
+		if (number > 2147483647 && number < 0)
 		{
 			cout << "2147483647이하의 양의 정수를 입력해주십시오" << endl;
 			continue;
@@ -781,17 +486,25 @@ int DEF::menu()
 		}
 		else if (number == 4)
 		{
-			DeleteAll(master);
+			Modify2(master);
 		}
 		else if (number == 5)
 		{
-			Delete(master);
+			Delete2(master);
 		}
 		else if (number == 6)
 		{
-			Traversal(master);
+			DeleteAll(master);
 		}
 		else if (number == 7)
+		{
+			Delete(master);
+		}
+		else if (number == 8)
+		{
+			Traversal(master);
+		}
+		else if (number == 9)
 		{
 			DeleteAll(master);
 			Destroy(master);
