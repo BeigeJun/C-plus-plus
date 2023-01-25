@@ -123,7 +123,7 @@ Node* DEF::AppendFromHead(LinkedList* _ptList)
 	(_ptList->m_uCount)++;
 	return 0;
 }
-Node2* DEF::AppendFromHead2(Node* base) 
+Node2* DEF::AppendFromHead2(Node* base)
 {
 	int num = 0;
 	cout << "약의 갯수를 입력하시오:";
@@ -453,7 +453,7 @@ Node* DEF::veiw(LinkedList* _ptList)
 	pointer = _ptList->m_pHead;
 	for (int i = 0; i != _ptList->m_uCount; i++)
 	{
-		cout << "이름: " <<pointer->name << " 나이: " << pointer->m_iObject << " 주소: " << pointer->adress << endl;
+		cout << "이름: " << pointer->name << " 나이: " << pointer->m_iObject << " 주소: " << pointer->adress << endl;
 		cout << "약 :";
 		pointer2 = pointer->medicine_head;
 		for (int i = 0; i != pointer->medicine_num; i++)
@@ -473,7 +473,7 @@ Node* DEF::veiw(LinkedList* _ptList)
 void DEF::SortByBubble(LinkedList* _ptList)
 {
 
-	for (int i = 0; i != _ptList->m_uCount; i++)
+	for (int i = 1; i != _ptList->m_uCount; i++)
 	{
 		if (_ptList->m_uCount == 0)
 		{
@@ -502,11 +502,11 @@ void DEF::SortByBubble(LinkedList* _ptList)
 		}
 		Node* pointerPre = _ptList->m_pHead;
 		Node* pointer = _ptList->m_pHead->m_pNext;
-		for (int j = 0; j != _ptList->m_uCount; j++)
+		for (int j = 1; j != _ptList->m_uCount; j++)
 		{
-			if (pointerPre->name > pointer->name)
+			if (pointerPre->name[0] > pointer->name[0])
 			{
-				if (pointerPre == _ptList->m_pHead)
+				if(pointerPre == _ptList->m_pHead)
 				{
 					Node* pointerNext = pointer->m_pNext;
 					_ptList->m_pHead = pointer;
@@ -609,6 +609,7 @@ int DEF::menu()
 		cout << "|8.모든 손님 이름 출력                         |" << endl;
 		cout << "|9.모든 손님 정보 출력                         |" << endl;
 		cout << "|10.모든 정보 지우기(끝내기)                   |" << endl;
+		cout << "|11.손님 이름 버블정렬                         |" << endl;
 		cout << " ----------------------------------------------" << endl;
 		cout << "입력 : ";
 
