@@ -22,6 +22,7 @@ public:
 	Node* Delete2(LinkedList* _ptList);
 	Node* Modify(LinkedList* _ptList);
 	Node* Modify2(LinkedList* _ptList);
+	Node* veiw(LinkedList* _ptList);
 	int menu();
 };
 LinkedList* DEF::Create()
@@ -95,10 +96,7 @@ Node* DEF::Read(LinkedList* _ptList)
 }
 void DEF::Traversal(LinkedList* _ptList)
 {
-
 	_ptList->m_pCurrent = _ptList->m_pHead;
-
-
 	for (int i = 0; i != _ptList->m_uCount; i++) {
 
 		cout << _ptList->m_pCurrent->name << " ";
@@ -121,7 +119,7 @@ Node* DEF::AppendFromHead(LinkedList* _ptList)
 	(_ptList->m_uCount)++;
 	return 0;
 }
-Node2* DEF::AppendFromHead2(Node* base)
+Node2* DEF::AppendFromHead2(Node* base) 
 {
 	int num = 0;
 	cout << "약의 갯수를 입력하시오:";
@@ -319,7 +317,7 @@ Node* DEF::Delete2(LinkedList* _ptList)
 		pointer = pointer->m_pNext;
 		count1++;
 	}
-	if (count1 == _ptList->m_uCount)
+	if (count1 > _ptList->m_uCount)
 	{
 		cout << name1 << " 고객이 없습니다." << endl;
 		pointer = NULL;
@@ -443,12 +441,37 @@ Node* DEF::Modify2(LinkedList* _ptList)
 	free(pointer);
 	return 0;
 }
+Node* DEF::veiw(LinkedList* _ptList)
+{
+
+	Node* pointer = new Node;
+	Node2* pointer2 = new Node2;
+	pointer = _ptList->m_pHead;
+	for (int i = 0; i != _ptList->m_uCount; i++)
+	{
+		cout << "이름: " <<pointer->name << " 나이: " << pointer->m_iObject << " 주소: " << pointer->adress << endl;
+		cout << "약 :";
+		pointer2 = pointer->medicine_head;
+		for (int i = 0; i != pointer->medicine_num; i++)
+		{
+			cout << pointer2->name << " ";
+			pointer2 = pointer2->m_pNext;
+		}
+		cout << endl;
+		pointer = pointer->m_pNext;
+	}
+	pointer2 = NULL;
+	pointer = NULL;
+	free(pointer);
+	free(pointer2);
+	return 0;
+}
 int DEF::menu()
 {
-	int number;
-	int word = 0;
-	
+	int number; 
+	 
 
+	int word = 0;
 	LinkedList* master = Create();
 	while (1)
 	{
@@ -462,7 +485,8 @@ int DEF::menu()
 		cout << "|6.모든 손님 정보 지우기                       |" << endl;
 		cout << "|7.지정 손님 정보 지우기                       |" << endl;
 		cout << "|8.모든 손님 이름 출력                         |" << endl;
-		cout << "|9.모든 정보 지우기(끝내기)                    |" << endl;
+		cout << "|9.모든 손님 정보 출력                         |" << endl;
+		cout << "|10.모든 정보 지우기(끝내기)                   |" << endl;
 		cout << " ----------------------------------------------" << endl;
 		cout << "입력 : ";
 
@@ -472,8 +496,7 @@ int DEF::menu()
 		for (int f = 0; tmp[f] != '\0'; f++)
 		{
 			if (tmp[f] >= '0' && tmp[f] <= '9')
-			{
-			}
+			{}
 			else
 			{
 				word = word + 1;
@@ -528,6 +551,10 @@ int DEF::menu()
 			Traversal(master);
 		}
 		else if (number == 9)
+		{
+			veiw(master);
+		}
+		else if (number == 10)
 		{
 			DeleteAll(master);
 			Destroy(master);
