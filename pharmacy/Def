@@ -23,6 +23,10 @@ public:
 	Node* Modify(LinkedList* _ptList);
 	Node* Modify2(LinkedList* _ptList);
 	Node* veiw(LinkedList* _ptList);
+	void SortByBubble(LinkedList* _ptList);
+	int SortByInsertion(LinkedList* _ptList);
+	void SortBySelection(LinkedList* _ptList);
+	int NUM();
 	int menu();
 };
 LinkedList* DEF::Create()
@@ -46,7 +50,7 @@ Node* DEF::GetNode()
 	cout << "이름: ";
 	cin >> pNode->name;
 	cout << "나이: ";
-	cin >> pNode->m_iObject;
+	pNode->m_iObject = NUM();
 	cout << "주소: ";
 	cin >> pNode->adress;
 	AppendFromHead2(pNode);
@@ -123,7 +127,7 @@ Node2* DEF::AppendFromHead2(Node* base)
 {
 	int num = 0;
 	cout << "약의 갯수를 입력하시오:";
-	cin >> num;
+	num = NUM();
 	for (int i = 0; i != num; i++)
 	{
 		Node2* pointer = GetNode2();
@@ -391,7 +395,7 @@ Node* DEF::Modify(LinkedList* _ptList)
 			cout << "이름: ";
 			cin >> pointer->name;
 			cout << "나이: ";
-			cin >> pointer->m_iObject;
+			pointer->m_iObject = NUM();
 			cout << "주소: ";
 			cin >> pointer->adress;
 			pointer = NULL;
@@ -466,13 +470,131 @@ Node* DEF::veiw(LinkedList* _ptList)
 	free(pointer2);
 	return 0;
 }
+void DEF::SortByBubble(LinkedList* _ptList)
+{
+
+	for (int i = 0; i != _ptList->m_uCount; i++)
+	{
+		if (_ptList->m_uCount == 0)
+		{
+			cout << "저장된 데이터가 없습니다." << endl;
+			break;
+		}
+		if (_ptList->m_uCount == 1)
+		{
+			break;
+		}
+		if (_ptList->m_uCount == 2)
+		{
+			Node* pointer = _ptList->m_pHead;
+			Node* pointerNext = pointer->m_pNext;
+			if (pointer->name < pointerNext->name)
+			{
+				_ptList->m_pHead = pointerNext;
+				_ptList->m_pTail = pointer;
+				pointerNext->m_Previous = pointerNext;
+				pointerNext->m_pNext = pointer;
+				pointer->m_Previous = pointerNext;
+				pointer->m_pNext = pointer;
+				break;
+			}
+			break;
+		}
+		Node* pointerPre = _ptList->m_pHead;
+		Node* pointer = _ptList->m_pHead->m_pNext;
+		for (int j = 0; j != _ptList->m_uCount; j++)
+		{
+			if (pointerPre->name > pointer->name)
+			{
+				if (pointerPre == _ptList->m_pHead)
+				{
+					Node* pointerNext = pointer->m_pNext;
+					_ptList->m_pHead = pointer;
+					pointer->m_Previous = pointer;
+					pointer->m_pNext = pointerPre;
+
+					pointerPre->m_Previous = pointer;
+					pointerPre->m_pNext = pointerNext;
+
+					pointerNext->m_Previous = pointerPre;
+
+					pointer = pointer->m_pNext;
+					pointerPre = pointerPre->m_Previous;
+				}
+				else if (pointer == _ptList->m_pTail)
+				{
+					Node* pointerPrePre = pointerPre->m_Previous;
+					_ptList->m_pTail = pointerPre;
+					pointerPre->m_Previous = pointer;
+					pointerPre->m_pNext = pointerPre;
+
+					pointer->m_Previous = pointerPrePre;
+					pointer->m_pNext = pointerPre;
+
+					pointerPrePre->m_pNext = pointer;
+
+					pointer = pointer->m_pNext;
+					pointerPre = pointerPre->m_Previous;
+				}
+				else
+				{
+					Node* pointerPrePre = pointerPre->m_Previous;
+					Node* pointerNext = pointer->m_pNext;
+					pointer->m_pNext = pointerPre;
+					pointer->m_Previous = pointerPrePre;
+
+					pointerPre->m_pNext = pointerNext;
+					pointerPre->m_Previous = pointer;
+
+					pointerPrePre->m_pNext = pointer;
+					pointerNext->m_Previous = pointerPre;
+
+					pointer = pointer->m_pNext;
+					pointerPre = pointerPre->m_Previous;
+				}
+			}
+			pointerPre = pointerPre->m_pNext;
+			pointer = pointer->m_pNext;
+		}
+	}
+}
+int DEF::NUM()
+{
+	int number;
+	int word = 0;
+	char tmp[100];
+	rewind(stdin);
+	gets_s(tmp);
+	for (int f = 0; tmp[f] != '\0'; f++)
+	{
+		if (tmp[f] >= '0' && tmp[f] <= '9')
+		{
+		}
+		else
+		{
+			word = word + 1;
+			break;
+		}
+	}
+	if (word != 0)
+	{
+		system("cls");
+		word = 0;
+		cout << "문자가 포함되어있음 다시 입력하시오" << endl;
+		return -1;
+	}
+	number = atoi(tmp);
+	if (number > 2147483647 && number < 0)
+	{
+		cout << "2147483647이하의 양의 정수를 입력해주십시오" << endl;
+		return -1;
+	}
+	return number;
+}
 int DEF::menu()
 {
-	int number; 
-	 
-
-	int word = 0;
 	LinkedList* master = Create();
+	int number;
 	while (1)
 	{
 		cout << endl;
@@ -490,32 +612,7 @@ int DEF::menu()
 		cout << " ----------------------------------------------" << endl;
 		cout << "입력 : ";
 
-		char tmp[100];
-		rewind(stdin);
-		gets_s(tmp);
-		for (int f = 0; tmp[f] != '\0'; f++)
-		{
-			if (tmp[f] >= '0' && tmp[f] <= '9')
-			{}
-			else
-			{
-				word = word + 1;
-				break;
-			}
-		}
-		if (word != 0)
-		{
-			system("cls");
-			word = 0;
-			cout << "문자가 포함되어있음 다시 입력하시오" << endl;
-			continue;
-		}
-		number = atoi(tmp);
-		if (number > 2147483647 && number < 0)
-		{
-			cout << "2147483647이하의 양의 정수를 입력해주십시오" << endl;
-			continue;
-		}
+		number = NUM();
 		system("cls");
 
 		if (number == 1)
@@ -560,6 +657,10 @@ int DEF::menu()
 			Destroy(master);
 			cout << "종료합니다.";
 			return 0;
+		}
+		else if (number == 11)
+		{
+			SortByBubble(master);
 		}
 	}
 }
