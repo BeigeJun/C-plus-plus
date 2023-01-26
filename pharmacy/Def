@@ -61,6 +61,8 @@ Node* DEF::GetNode()
 	while (pNode->m_iObject == -1) {
 		pNode->m_iObject = NUM();
 	}
+	cout << "전화번호: ";
+	cin >> pNode->phone;
 	cout << "주소: ";
 	cin >> pNode->adress;
 	AppendFromHead2(pNode);
@@ -86,7 +88,7 @@ Node* DEF::Read(LinkedList* _ptList)
 	{
 		if (strcmp(pointer->name, a) == 0)
 		{
-			cout << "나이: " << pointer->m_iObject << " 주소: " << pointer->adress << endl;
+			cout << "나이: " << pointer->m_iObject << " 전화번호: " << pointer->phone << " 주소: " << pointer->adress << endl;
 			cout << "약 :";
 			Node2* pointer2 = pointer->medicine_head;
 			for (int i = 0; i != pointer->medicine_num; i++)
@@ -291,7 +293,10 @@ void DEF::DeleteAll(LinkedList* _ptList)
 Node* DEF::InsertBefor(LinkedList* _ptList)
 {
 	cout << "추가할 위치를 입력하시오 : ";
-	int num = NUM();
+	int num = -1;
+	while (num == -1) {
+		num = NUM();
+	}
 	if (_ptList->m_uCount < 1)
 	{
 		cout << "저장된 손님의 정보가 없습니다." << endl;
@@ -326,7 +331,10 @@ Node* DEF::InsertBefor(LinkedList* _ptList)
 Node* DEF::InsertAfter(LinkedList* _ptList)
 {
 	cout << "추가할 위치를 입력하시오 : ";
-	int num = NUM();
+	int num = -1;
+	while (num == -1) {
+		num = NUM();
+	}
 	if (_ptList->m_uCount < 1)
 	{
 		cout << "저장된 손님의 정보가 없습니다." << endl;
@@ -500,12 +508,21 @@ Node* DEF::Modify(LinkedList* _ptList)
 		if (strcmp(pointer->name, a) == 0)
 		{
 			cout << "변경전:" << endl;
-			cout << "나이: " << pointer->m_iObject << " 주소: " << pointer->adress << endl;
+			cout << "나이: " << pointer->m_iObject << " 전화번호: " << pointer->phone << " 주소: " << pointer->adress << endl;
 			cout << "변경할 내용을 입력하시오:" << endl;
 			cout << "이름: ";
 			cin >> pointer->name;
 			cout << "나이: ";
 			pointer->m_iObject = NUM();
+			if (pointer->m_iObject == -1)
+			{
+				while (pointer->m_iObject == -1)
+				{
+					pointer->m_iObject = NUM();
+				}
+			}
+			cout << "전화번호: ";
+			cin >> pointer->phone;
 			cout << "주소: ";
 			cin >> pointer->adress;
 			pointer = NULL;
@@ -563,7 +580,7 @@ Node* DEF::veiw(LinkedList* _ptList)
 	pointer = _ptList->m_pHead;
 	for (int i = 0; i != _ptList->m_uCount; i++)
 	{
-		cout << "이름: " << pointer->name << " 나이: " << pointer->m_iObject << " 주소: " << pointer->adress << endl;
+		cout << "이름: " << pointer->name << " 나이: " << pointer->m_iObject << "전화번호: " << pointer->phone << " 주소: " << pointer->adress << endl;
 		cout << "약 :";
 		pointer2 = pointer->medicine_head;
 		for (int i = 0; i != pointer->medicine_num; i++)
@@ -616,7 +633,7 @@ void DEF::SortByBubble(LinkedList* _ptList)
 		{
 			if (pointerPre->name[0] > pointer->name[0])
 			{
-				if(pointerPre == _ptList->m_pHead)
+				if (pointerPre == _ptList->m_pHead)
 				{
 					Node* pointerNext = pointer->m_pNext;
 					_ptList->m_pHead = pointer;
@@ -685,12 +702,13 @@ int DEF::SortByInsertion(LinkedList* _ptList)
 		Node* Next_pointer = pointer->m_pNext;
 		for (int k = 1; k < _ptList->m_uCount; k++)
 		{
-			if (strcmp(pointer->name,Next_pointer->name) ==1)
+			if (strcmp(pointer->name, Next_pointer->name) == 1)
 			{
 				int temp;
 				unsigned int temp1;
 				char temp2[20];
 				char temp3[30];
+				char temp4[20];
 				Node2* temp5;
 				//나이
 				temp = pointer->m_iObject;
@@ -701,13 +719,17 @@ int DEF::SortByInsertion(LinkedList* _ptList)
 				pointer->medicine_num = Next_pointer->medicine_num;
 				Next_pointer->medicine_num = temp1;
 				//이름
-				strcpy(temp2,pointer->name);
-				strcpy(pointer->name,Next_pointer->name);
+				strcpy(temp2, pointer->name);
+				strcpy(pointer->name, Next_pointer->name);
 				strcpy(Next_pointer->name, temp2);
 				//주소
 				strcpy(temp3, pointer->adress);
 				strcpy(pointer->adress, Next_pointer->adress);
 				strcpy(Next_pointer->adress, temp3);
+				//전화번호
+				strcpy(temp4, pointer->phone);
+				strcpy(pointer->phone, Next_pointer->phone);
+				strcpy(Next_pointer->phone, temp4);
 				//약 리스트
 				temp5 = pointer->medicine_head;
 				pointer->medicine_head = Next_pointer->medicine_head;
@@ -774,6 +796,7 @@ void DEF::SortBySelection(LinkedList* _ptList)
 		unsigned int temp1;
 		char temp2[20];
 		char temp3[30];
+		char temp4[20];
 		Node2* temp5;
 		//나이
 		temp = pointer->m_iObject;
@@ -787,6 +810,10 @@ void DEF::SortBySelection(LinkedList* _ptList)
 		strcpy(temp2, pointer->name);
 		strcpy(pointer->name, head->name);
 		strcpy(head->name, temp2);
+		//전화번호
+		strcpy(temp4, pointer->phone);
+		strcpy(pointer->phone, head->phone);
+		strcpy(head->phone, temp4);
 		//주소
 		strcpy(temp3, pointer->adress);
 		strcpy(pointer->adress, head->adress);
@@ -837,7 +864,7 @@ int DEF::Gumsa(Node* base, Node2* pointer)
 		Node2* scan = base->medicine_head;
 		for (int i = 0; i < base->medicine_num; i++)
 		{
-			if (strcmp(scan->name, pointer->name)==0)
+			if (strcmp(scan->name, pointer->name) == 0)
 			{
 				cout << "약이 중복입니다. 하나를 넘어갑니다." << endl;
 				scan = NULL;
