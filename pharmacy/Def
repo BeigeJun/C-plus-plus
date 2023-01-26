@@ -103,7 +103,7 @@ Node* DEF::Read(LinkedList* _ptList)
 		}
 		pointer = pointer->m_pNext;
 	}
-	cout << a << " 고객이 없습니다." << endl;
+	cout << a << " 저장된 손님의 정보가 없습니다." << endl;
 	pointer = NULL;
 	free(pointer);
 	return 0;
@@ -294,12 +294,12 @@ Node* DEF::InsertBefor(LinkedList* _ptList)
 	int num = NUM();
 	if (_ptList->m_uCount < 1)
 	{
-		cout << "노드의 개수가 0개입니다." << endl;
+		cout << "저장된 손님의 정보가 없습니다." << endl;
 		return 0;
 	}
 	if (_ptList->m_uCount < num)
 	{
-		cout << num << "번째 노드는 없습니다." << endl;
+		cout << num << "번째 손님은 없습니다." << endl;
 		return 0;
 	}
 	if (num == 1)
@@ -329,12 +329,12 @@ Node* DEF::InsertAfter(LinkedList* _ptList)
 	int num = NUM();
 	if (_ptList->m_uCount < 1)
 	{
-		cout << "노드의 개수가 0개입니다." << endl;
+		cout << "저장된 손님의 정보가 없습니다." << endl;
 		return 0;
 	}
 	else if (_ptList->m_uCount < num)
 	{
-		cout << num << "번째 노드는 없습니다." << endl;
+		cout << num << "번째 손님은 없습니다." << endl;
 		return 0;
 	}
 	if (num == _ptList->m_uCount)
@@ -362,7 +362,7 @@ Node* DEF::Delete(LinkedList* _ptList)
 {
 	char name[20];
 	int count = 1;
-	cout << "삭제할 고객님의 이름을 입력하시오";
+	cout << "삭제할 손님의 이름을 입력하시오";
 	cin >> name;
 	Node* SomeThing;
 	Node* SomeThingBefore;
@@ -403,7 +403,7 @@ Node* DEF::Delete(LinkedList* _ptList)
 			SomeThing = SomeThing->m_pNext;
 			count++;
 		}
-		cout << "해당 고객이 저장되어있지 않습니다.";
+		cout << "해당 손님이 저장되어있지 않습니다.";
 		return 0;
 	}
 }
@@ -417,7 +417,7 @@ Node* DEF::Delete2(LinkedList* _ptList)
 	pointer = _ptList->m_pHead;
 	if (_ptList->m_uCount == 0)
 	{
-		cout << name1 << " 고객이 없습니다." << endl;
+		cout << name1 << " 저장된 손님의 정보가 없습니다." << endl;
 		pointer = NULL;
 		free(pointer);
 		return 0;
@@ -433,7 +433,7 @@ Node* DEF::Delete2(LinkedList* _ptList)
 	}
 	if (count1 > _ptList->m_uCount)
 	{
-		cout << name1 << " 고객이 없습니다." << endl;
+		cout << name1 << "손님이 저장되어있지 않습니다." << endl;
 		pointer = NULL;
 		free(pointer);
 		return 0;
@@ -514,7 +514,7 @@ Node* DEF::Modify(LinkedList* _ptList)
 		}
 		pointer = pointer->m_pNext;
 	}
-	cout << a << " 고객이 없습니다." << endl;
+	cout << a << " 손님의 정보가 없습니다." << endl;
 	pointer = NULL;
 	free(pointer);
 	return 0;
@@ -550,7 +550,7 @@ Node* DEF::Modify2(LinkedList* _ptList)
 		}
 		pointer = pointer->m_pNext;
 	}
-	cout << a << " 고객이 없습니다." << endl;
+	cout << a << " 손님의 정보가 없습니다." << endl;
 	pointer = NULL;
 	free(pointer);
 	return 0;
@@ -668,6 +668,135 @@ void DEF::SortByBubble(LinkedList* _ptList)
 		}
 	}
 }
+int DEF::SortByInsertion(LinkedList* _ptList)
+{
+	if (_ptList->m_uCount == 0)
+	{
+		cout << "저장된 손님의 정보가 없습니다." << endl;
+		return 0;
+	}
+	Node* pointer = _ptList->m_pHead;
+	for (int i = 1; i < _ptList->m_uCount; i++)
+	{
+		if (_ptList->m_uCount == 1)
+		{
+			break;
+		}
+		Node* Next_pointer = pointer->m_pNext;
+		for (int k = 1; k < _ptList->m_uCount; k++)
+		{
+			if (strcmp(pointer->name,Next_pointer->name) ==1)
+			{
+				int temp;
+				unsigned int temp1;
+				char temp2[20];
+				char temp3[30];
+				Node2* temp5;
+				//나이
+				temp = pointer->m_iObject;
+				pointer->m_iObject = Next_pointer->m_iObject;
+				Next_pointer->m_iObject = temp;
+				//약갯수
+				temp1 = pointer->medicine_num;
+				pointer->medicine_num = Next_pointer->medicine_num;
+				Next_pointer->medicine_num = temp1;
+				//이름
+				strcpy(temp2,pointer->name);
+				strcpy(pointer->name,Next_pointer->name);
+				strcpy(Next_pointer->name, temp2);
+				//주소
+				strcpy(temp3, pointer->adress);
+				strcpy(pointer->adress, Next_pointer->adress);
+				strcpy(Next_pointer->adress, temp3);
+				//약 리스트
+				temp5 = pointer->medicine_head;
+				pointer->medicine_head = Next_pointer->medicine_head;
+				Next_pointer->medicine_head = temp5;
+			}
+			Next_pointer = Next_pointer->m_pNext;
+		}
+		pointer = pointer->m_pNext;
+	}
+	return 0;
+}
+void DEF::SortBySelection(LinkedList* _ptList)
+{
+
+	for (int z = 0; z < _ptList->m_uCount - 1; z++)
+	{
+		if (_ptList->m_uCount == 0)
+		{
+			cout << "저장된 손님의 정보가 없습니다." << endl;
+			break;
+		}
+		if (_ptList->m_uCount == 1)
+		{
+			break;
+		}
+		Node* pointer = _ptList->m_pHead;
+		Node* head = _ptList->m_pHead;
+		char Min[20];
+
+		for (int x = 0; x < z; x++)
+		{
+			pointer = pointer->m_pNext;
+		}
+		strcpy(Min, pointer->name);
+
+		for (int i = z; i < _ptList->m_uCount; i++)
+		{
+			if (strcmp(pointer->name, Min) == -1)
+			{
+				strcpy(Min, pointer->name);
+			}
+			pointer = pointer->m_pNext;
+		}
+
+		pointer = _ptList->m_pHead;
+		for (int x = 0; x < z; x++)
+		{
+			pointer = pointer->m_pNext;
+		}
+
+		for (int x = 0; x < _ptList->m_uCount; x++)
+		{
+			if (strcmp(pointer->name, Min) != 0)
+			{
+				pointer = pointer->m_pNext;
+			}
+		}
+
+		for (int x = 0; x < z; x++)
+		{
+			head = head->m_pNext;
+		}
+		int temp;
+		unsigned int temp1;
+		char temp2[20];
+		char temp3[30];
+		Node2* temp5;
+		//나이
+		temp = pointer->m_iObject;
+		pointer->m_iObject = head->m_iObject;
+		head->m_iObject = temp;
+		//약갯수
+		temp1 = pointer->medicine_num;
+		pointer->medicine_num = head->medicine_num;
+		head->medicine_num = temp1;
+		//이름
+		strcpy(temp2, pointer->name);
+		strcpy(pointer->name, head->name);
+		strcpy(head->name, temp2);
+		//주소
+		strcpy(temp3, pointer->adress);
+		strcpy(pointer->adress, head->adress);
+		strcpy(head->adress, temp3);
+		//약 리스트
+		temp5 = pointer->medicine_head;
+		pointer->medicine_head = head->medicine_head;
+		head->medicine_head = temp5;
+	}
+}
 int DEF::NUM()
 {
 	int number;
@@ -752,7 +881,7 @@ Node* DEF::LinearSearchByUnique(LinkedList* _ptList)
 				continue;
 			}
 			else if (ox == 0) {
-				cout << "없는 숫자입니다" << endl;
+				cout << "없는 이름 입니다" << endl;
 			}
 		}
 	}
@@ -785,7 +914,7 @@ Node* DEF::LinearSearchByDuplicate(LinkedList* _ptList)
 				cout << "에 있습니다." << endl;
 			}
 			else if (ox == 0) {
-				cout << "없는 숫자 입니다." << endl;
+				cout << "없는 이름 입니다." << endl;
 			}
 		}
 	}
@@ -794,7 +923,7 @@ Node* DEF::LinearSearchByDuplicate(LinkedList* _ptList)
 Node* DEF::BinarySearchByUnique(LinkedList* _ptList, char target[], int start, int end) {
 	if (_ptList->m_uCount == 0)
 	{
-		cout << "노드의 개수가 0개입니다." << endl;
+		cout << "저장된 손님의 정보가 없습니다." << endl;
 		return 0;
 	}
 	Node* pointer = _ptList->m_pHead;
@@ -815,7 +944,7 @@ Node* DEF::BinarySearchByUnique(LinkedList* _ptList, char target[], int start, i
 				continue;
 			}
 			else if (ox == 0) {
-				cout << "없는 숫자 입니다." << endl;
+				cout << "없는 이름 입니다." << endl;
 				return 0;
 			}
 		}
@@ -859,7 +988,7 @@ Node* DEF::BinarySearchByDuplicate(LinkedList* _ptList, char target[], int start
 	{
 		if (_ptList->m_uCount == 0)
 		{
-			cout << "노드의 개수가 0개입니다." << endl;
+			cout << "저장된 손님의 정보가 없습니다." << endl;
 			return 0;
 		}
 		Node* pointer = _ptList->m_pHead;
@@ -881,7 +1010,7 @@ Node* DEF::BinarySearchByDuplicate(LinkedList* _ptList, char target[], int start
 					continue;
 				}
 				else if (ox == 0) {
-					cout << "없는 숫자 입니다." << endl;
+					cout << "없는 이름 입니다." << endl;
 					return 0;
 				}
 			}
@@ -939,10 +1068,12 @@ int DEF::menu()
 		cout << "|14.모든 손님 정보 출력                        |" << endl;
 		cout << "|15.모든 정보 지우기(끝내기)                   |" << endl;
 		cout << "|16.손님 이름 버블정렬                         |" << endl;
-		cout << "|17.단일 선형탐색으로 손님위치 찾기            |" << endl;
-		cout << "|18.다중 선형탐색으로 손님위치 찾기            |" << endl;
-		cout << "|19.단일 이진탐색으로 손님위치 찾기            |" << endl;
-		cout << "|20.다중 이진탐색으로 손님위치 찾기            |" << endl;
+		cout << "|17.손님 이름 삽입정렬                         |" << endl;
+		cout << "|18.손님 이름 선택정렬                         |" << endl;
+		cout << "|19.단일 선형탐색으로 손님위치 찾기            |" << endl;
+		cout << "|20.다중 선형탐색으로 손님위치 찾기            |" << endl;
+		cout << "|21.단일 이진탐색으로 손님위치 찾기            |" << endl;
+		cout << "|22.다중 이진탐색으로 손님위치 찾기            |" << endl;
 		cout << " ----------------------------------------------" << endl;
 		cout << "입력 : ";
 
@@ -1018,13 +1149,21 @@ int DEF::menu()
 		}
 		else if (number == 17)
 		{
-			LinearSearchByUnique(master);
+			SortByInsertion(master);
 		}
 		else if (number == 18)
 		{
-			LinearSearchByDuplicate(master);
+			SortBySelection(master);
 		}
 		else if (number == 19)
+		{
+			LinearSearchByUnique(master);
+		}
+		else if (number == 20)
+		{
+			LinearSearchByDuplicate(master);
+		}
+		else if (number == 21)
 		{
 			char target[20];
 			cout << "이름을 입력하시오: ";
@@ -1032,7 +1171,7 @@ int DEF::menu()
 			SortByBubble(master);
 			BinarySearchByUnique(master, target, 1, master->m_uCount);
 		}
-		else if (number == 20)
+		else if (number == 22)
 		{
 			char target[20];
 			cout << "이름을 입력하시오: ";
