@@ -21,7 +21,9 @@ public:
 	Node* append(LinkedList* _ptList,int num);
 	Node* delete_small(LinkedList* _ptList);
 	void veiw(LinkedList* _ptList);
-	void hanoi(int n, LinkedList* x, LinkedList* y, LinkedList* z);
+	void veiwAll(LinkedList* A, LinkedList* B, LinkedList* C);
+	void hanoi(int n, int from, int by, int to,LinkedList* A, LinkedList* B, LinkedList* C);
+	void Move(int from, int to, LinkedList* A, LinkedList* B, LinkedList* C);
 	int menu();
 };
 LinkedList* DEF::create(char num)
@@ -102,20 +104,56 @@ void DEF::veiw(LinkedList* _ptList)
 		cout << ")";
 	}
 }
-void DEF::hanoi(int n, LinkedList* x, LinkedList* y, LinkedList* z) {
-	if (n > 0) {
-		hanoi(n-1, x, z, y);
-		veiw(x);
-		veiw(y);
-		veiw(z);
-		cout << x->name << " 에서 "<< y->name<<" 로 이동\n" ;
-		hanoi(n-1, z, y, x);
-		int num = x->Tail->number;
-		delete_small(x);
-		append(y, num);
-		cout << endl;
+void DEF::veiwAll(LinkedList* A, LinkedList* B, LinkedList* C)
+{
+	veiw(A);
+	veiw(B);
+	veiw(C);
+	cout << endl;
+}
+void DEF::Move(int from, int to, LinkedList* A, LinkedList* B, LinkedList* C)
+{
+	if (from == 1)
+	{
+		int num = A->Tail->number;
+		delete_small(A);
+		if (to == 2)
+		{
+			append(B, num);
+		}
+		else
+		{
+			append(C, num);
+		}
+	}
+	else if (from == 2)
+	{
+		int num = B->Tail->number;
+		delete_small(B);
+		if (to == 1)
+		{
+			append(A, num);
+		}
+		else
+		{
+			append(C, num);
+		}
+	}
+	else
+	{
+		int num = C->Tail->number;
+		delete_small(C);
+		if (to == 1)
+		{
+			append(A, num);
+		}
+		else
+		{
+			append(B, num);
+		}
 	}
 }
+/*
 int DEF::menu()
 {
 	LinkedList* A = create('A');
@@ -147,7 +185,7 @@ int DEF::menu()
 	while (1) {
 		// 아래의 디스크들이 모두 옮겨졌다면 
 		// 그 다음 디스크를 옮겨야 한다.
-		while (i < n && disk[i] == 0) { cout << "...."; i += 1; }
+		while (i < n && disk[i] == 0) { i += 1; }
 		// 만약 다음 디스크가 n+1이라면 모두 끝난것이다.
 		if (i == n) break;
 		// 현재 디스크의 위치
@@ -206,9 +244,46 @@ int DEF::menu()
 		if (i < 0) { i = 0; }
 	}
 	return 0;
+}*/
+
+//                      출발      경유    도착
+void DEF::hanoi(int n, int from, int by, int to,LinkedList* A, LinkedList* B, LinkedList* C)
+{
+	if (n == 1) {
+		cout << from << " " << to << endl;
+		Move(from, to, A, B, C);
+		veiwAll(A, B, C);
+	}
+	else
+	{
+//                   출발 경유 도착
+		hanoi(n - 1, from, to, by,A,B,C);
+		cout << from << " " << to << endl;
+		Move(from, to, A, B, C);
+		veiwAll(A, B, C);
+		hanoi(n - 1, by, from, to,A,B,C);
+	}
+}
+int DEF::menu()
+{
+	
+	LinkedList* A = create('A');
+	LinkedList* B = create('B');
+	LinkedList* C = create('C');
+	int n;
+	cout << "계단의 수를 입력하시오: ";
+	cin >> n;
+	for (int i = n; i != 0; i--)
+	{
+		append(A, i);
+	}
+	hanoi(n, 1, 2, 3,A,B,C);
+	return 0;
 }
 
-int main() {
+int main()
+{
+	int n;
 	DEF a;
 	a.menu();
 	return 0;
