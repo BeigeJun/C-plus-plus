@@ -26,6 +26,7 @@ public:
     void hanoi(int n, LinkedList* A, LinkedList* B, LinkedList* C);
     void Move(int from, int to, LinkedList* A, LinkedList* B, LinkedList* C);
     int menu();
+    void del(LinkedList* _ptList, int num);
 };
 LinkedList* DEF::create(char num)
 {
@@ -154,7 +155,20 @@ void DEF::Move(int from, int to, LinkedList* A, LinkedList* B, LinkedList* C)
         }
     }
 }
-
+void DEF::del(LinkedList* _ptList, int num)
+{
+    if (num != 0)
+    {
+        Node* pointer = _ptList->Head;
+        for (int i = 1; i < num; i++)
+        {
+            pointer = pointer->Next;
+            free(pointer->Pre);
+        }
+        free(pointer);
+    }
+    delete(_ptList);
+}
 void DEF::hanoi(int n, LinkedList* A, LinkedList* B, LinkedList* C)
 {
     // 1은 옮겨야할 디스크를 나타내고,
@@ -265,6 +279,9 @@ int DEF::menu()
         append(A, i);
     }
     hanoi(n,A, B, C);
+    del(A, 0);
+    del(B, 0);
+    del(C, n);
     return 0;
 }
 
