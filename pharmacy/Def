@@ -154,6 +154,14 @@ Node2* DEF::AppendFromHead2(Node* base)
 	int num = 0;
 	cout << "추가 할 약의 갯수를 입력하시오:";
 	num = NUM();
+	while (1)
+	{
+		if (num == -1)
+		{
+			num = NUM();
+		}
+		else { break; }
+	}
 	for (int i = 0; i != num; i++)
 	{
 		Node2* pointer = GetNode2();
@@ -1208,5 +1216,3 @@ int DEF::menu()
 		}
 	}
 }
-
-
